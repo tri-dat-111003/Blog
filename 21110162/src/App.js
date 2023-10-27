@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
@@ -9,6 +9,14 @@ import EditPost from './components/EditPost'; // Import EditPost
 
 function App() {
   const [posts, setPosts] = useState([]);
+
+  // Lấy dữ liệu từ localStorage khi ứng dụng khởi chạy
+  useEffect(() => {
+    const storedPosts = localStorage.getItem('posts');
+    if (storedPosts) {
+      setPosts(JSON.parse(storedPosts));
+    }
+  }, []);
 
   const addPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -33,8 +41,13 @@ function App() {
         return prevPost;
       })
     );
-  };  
-  
+  };
+
+  // Lưu dữ liệu vào localStorage mỗi khi có thay đổi trong danh sách bài viết
+  useEffect(() => {
+    localStorage.setItem('posts', JSON.stringify(posts));
+  }, [posts]);
+
   return (
     <div className="App">
       <Router>
